@@ -1,0 +1,219 @@
+body {
+    background-image: url(assets/images/stone-texture.jpg);
+    transition: background-image 0.5s ease;
+    text-align: center;
+    margin: 0;
+    font-family: "Arial";
+    color: rgb(21, 21, 21);
+}
+
+body.dark {
+    background-image: url(assets/images/skinlam-black-marble-sn.jpg);
+    color: white;
+}
+
+.container {
+    max-width: 500px;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-container {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2%;
+}
+
+.play-field {
+    display: grid;
+    width: 100%;
+    box-shadow: 0px 4px 3px rgba(13, 96, 111, 0.25);
+    margin-bottom: 3%;
+}
+
+.row {
+    display: flex;
+}
+
+.item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(236, 238, 239);
+    border: 1px solid rgb(195, 190, 190);
+    border-radius: 1%;
+    cursor: pointer;
+    transition: background-color 0.5s ease;
+}
+
+.item.dark {
+    background-color: rgb(148, 76, 76);
+    border: 1px solid rgb(31, 30, 30);
+}
+
+.open {
+    background-color: rgb(255, 255, 255);
+}
+
+.open.dark {
+    background-color: rgb(49, 49, 49);
+}
+
+.bomb {
+    background-image: url('assets/icons/bomb2.png');
+    background-size: contain;
+    background-color: transparent;
+    background-repeat: no-repeat;
+}
+
+.flag {
+    background-image: url('assets/icons/flag2.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 100%;
+    height: 90%;
+}
+
+.menu-container>.flag {
+    height: 30px;
+    width: 30px;
+}
+
+.sound {
+    background-image: url("assets/icons/sound-on.svg");
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.sound.off {
+    background-image: url("assets/icons/sound-off.png");
+}
+
+.modal {
+    display: none;
+}
+
+.modal.visible {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 3;
+}
+
+.modal-window {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+    height: 100px;
+    background: #c1bcbc;
+    color: rgb(40, 33, 22);
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    gap: 2%;
+    align-items: center;
+    box-shadow: 0px 4px 3px rgba(13, 96, 111, 0.25);
+    transition: transform 0.5s;
+    border-radius: 10px;
+    z-index: 5;
+}
+
+.btn {
+    padding: 2%;
+    margin: 5%;
+    border: none;
+    background: #847f86;
+    box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
+    color: rgba(234, 226, 226, 0.84);
+    border-radius: 6px;
+    top: 11%;
+    transition: transform 0.5s;
+    cursor: pointer;
+}
+
+.btn:hover {
+    color: rgba(250, 248, 248, 0.84);
+    box-shadow: 0px 4px 3px rgba(13, 96, 111, 0.25);
+}
+
+.mines-container>input {
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+.toggler {
+    display: flex;
+    align-items: center;
+    gap: 2%;
+}
+
+.toggle-label {
+    display: inline-block;
+    position: relative;
+    border-radius: 15px;
+    width: 60px;
+    height: 30px;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+.toggle-label::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 27px;
+    height: 27px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+
+input[type="checkbox"]:checked+.toggle-label::before {
+    transform: translateX(26px);
+    background-color: rgb(41, 40, 40);
+}
+
+.results {
+    text-align: start;
+    width: 100%;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 10%;
+}
+
+@media screen and (max-width: 550px) {
+    .modal-window {
+        max-width: 300px;
+        flex-direction: column;
+        padding: 5%;
+    }
+}
