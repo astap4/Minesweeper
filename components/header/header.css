@@ -1,0 +1,60 @@
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    width: 70%;
+}
+
+.btn {
+    padding: 1.5%;
+    width: 100px;
+    height: 40px;
+    border: none;
+    background: #f0a338;
+    box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
+    color: rgb(33, 33, 33);
+    font-weight: 800;
+    text-shadow:
+    -1px -1px 0 #ffffff, /* Верхний левый угол */
+    1px -1px 0 #ffffff, /* Верхний правый угол */
+    -1px 1px 0 #ffffff, /* Нижний левый угол */
+    1px 1px 0 #ffffff; /* Нижний правый угол */
+    border-radius: 6px;
+    top: 11%;
+    transition: transform 0.5s;
+    cursor: pointer;
+    margin: 2%;
+}
+
+.title {
+    color: rgb(33, 33, 33);
+    text-shadow:
+    -1px -1px 0 #fff, /* Верхний левый угол */
+    1px -1px 0 #fff, /* Верхний правый угол */
+    -1px 1px 0 #fff, /* Нижний левый угол */
+    1px 1px 0 #fff; /* Нижний правый угол */
+    position: relative;
+    z-index: 1; 
+}
+
+.title::after {
+    position: absolute;
+    content: url("../../assets/icons/bomb.svg");
+    display: inline-block;
+    margin-left: -22px;
+    z-index: -1;
+    transform: scale(0.7);
+    top: -30px;
+  }
+
+.btn:hover {
+    background: #fbc170;
+    box-shadow: 0px 4px 3px rgba(13, 96, 111, 0.25);
+}
