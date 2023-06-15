@@ -1,7 +1,6 @@
-import Header from './components/header/HeaderView.js';
-import GameView from './components/gameView/GameView.js';
+import PlayFieldView from './components/playFieldView/PlayFieldView.js';
 import Settings from './components/settings/Settings.js';
-import HeaderView from './components/header/HeaderView.js';
+import HeaderView from './components/headerView/HeaderView.js';
 import RulesView from './components/rulesView/RulesView.js';
 import RecordsView from './components/recordsView/RecordsView.js';
 export default class ViewGame {
@@ -45,10 +44,9 @@ export default class ViewGame {
             this.main.classList.add('main');
             this.header = new HeaderView();
             const headerElem = this.header.getElement();
-            this.gameView = new GameView(this.model);
+            this.gameView = new PlayFieldView(this.model);
             const gameElem = this.gameView.getElement();
             this.main.append(gameElem)
-            console.log(this.main)
             this.bodyContainer.append(headerElem, this.main)
         }
 
@@ -89,11 +87,19 @@ export default class ViewGame {
         }
     }
 
-    showModalWindow() {
+    showModalWindow(result) {
         const modalContainer = document.querySelector('.modal');
         const modalWindow = document.querySelector('.modal-window');
+        const time = document.querySelector('.time').textContent;
         modalContainer.classList.add('visible');
-        modalWindow.textContent = 'GAME OVER. TRY AGAIN';
+        switch (result) {
+            case 'Win':
+                modalWindow.textContent = `Hooray! You found all mines in ${time} and ${this.model.moves} moves!`;
+                break;
+            case 'Loss':
+                modalWindow.textContent = 'GAME OVER. TRY AGAIN';
+                break;
+        }
     }
 
     showGamePage() {
@@ -112,7 +118,7 @@ export default class ViewGame {
         if (lastElement != gameContainer) {
             this.main.removeChild(lastElement);
         }
-        if (this.settings) {         
+        if (this.settings) {
             this.main.append(this.settings)
         } else {
             this.settings = new Settings(this.model).getElement()
@@ -127,7 +133,7 @@ export default class ViewGame {
         if (lastElement != gameContainer) {
             this.main.removeChild(lastElement);
         }
-        if (this.rules) {         
+        if (this.rules) {
             this.main.append(this.rules)
         } else {
             this.rules = new RulesView(this.model).getElement()
@@ -142,11 +148,22 @@ export default class ViewGame {
         if (lastElement != gameContainer) {
             this.main.removeChild(lastElement);
         }
-        if (this.records) {         
+        if (this.records) {
             this.main.append(this.records)
         } else {
             this.records = new RecordsView(this.model).getElement()
             this.main.append(this.records)
+        }
+    }
+
+    getResults(newResult) {
+        const result = document.createElement('div')
+        result.textContent = `Time: ${newResult.time} Moves: ${newResult.moves} `;
+        if (this.records) {
+            this.records.append(result)
+        } else {
+            this.records = new RecordsView(this.model).getElement()
+            this.records.append(result)
         }
     }
 

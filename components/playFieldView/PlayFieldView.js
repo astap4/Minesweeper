@@ -1,4 +1,4 @@
-export default class GameView {
+export default class PlayFieldView {
     constructor(model) {
         this.gameContainer = null;
         this.model = model;
@@ -42,7 +42,6 @@ export default class GameView {
     }
 
     createField(size) {
-        console.log(this.model)
         this.playField.innerHTML='';
         this.model.startTimer();
         // modalContainer.classList.remove('visible');

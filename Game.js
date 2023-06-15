@@ -11,6 +11,8 @@ export default class Game {
         this.minutes = 0;
         this.matrix = [];
         this.isMuted = false;
+        this.items = null;
+        this.results = [];
         this.SPAState = {};
     }
 
@@ -21,6 +23,9 @@ export default class Game {
     updateView() {
         if (this.view)
             this.view.build();
+        const playField = document.querySelector('.play-field');
+        this.items = [...playField.children];
+
     }
 
     set bombsNum(value) {
@@ -35,6 +40,8 @@ export default class Game {
     restart() {
         this.stopTimer()
         this.view.build();
+        const playField = document.querySelector('.play-field');
+        this.items = [...playField.children];
         this.moves = 0;
         this.view.updateTime(this.minutes, this.seconds);
         this.view.updateFlags(this._bombsNum);;
@@ -110,35 +117,34 @@ export default class Game {
         clearInterval(this.timer);
     }
 
-    initCell(cellNum, items) {
+    initCell(cellNum) {
         const x = Math.floor(cellNum / this._size);
         const y = cellNum % this._size;
         this.moves++;
         if (!this.isMuted) {
             this.playAudio('click');
         }
-        this.openCell(x, y, items);
+        this.openCell(x, y);
     }
 
-    openCell(x, y, items) {
+    openCell(x, y) {
         const BOMB = -1;
         const EMPTY = 0;
         this.view.updateMoves(this.moves);
         const index = x * this._size + y;
-        const currItem = items[index];
+        const currItem = this.items[index];
         if (!currItem || currItem.classList.contains('open')) {
             return;
         }
         const value = this.matrix[x][y];
         this.view.updateColor(currItem, value);
-
         if (value === BOMB) {
             this.view.showBomb(currItem);
             if (!this.isMuted) {
                 this.playAudio('bomb');
             }
             this.stopTimer();
-            this.view.showModalWindow();
+            this.view.showModalWindow('Loss');
         } else if (value === EMPTY) {
             currItem.textContent = value;
             const neighbors = [];
@@ -150,13 +156,13 @@ export default class Game {
             for (let i = 0; i < neighbors.length; i++) {
                 const [neighborX, neighborY] = neighbors[i];
                 if (this.isValid(neighborX, neighborY)) {
-                    this.openCell(neighborX, neighborY, items);
+                    this.openCell(neighborX, neighborY);
                 }
             }
         } else {
             currItem.textContent = value;
         }
-        // checkRemainingCells(items);
+        this.checkRemainingCells();
     }
 
     openFlag(elem) {
@@ -173,7 +179,7 @@ export default class Game {
             if (!this.isMuted) {
                 this.playAudio('click');
             }
-            // checkRemainingCells(items);
+            this.checkRemainingCells();
         }
     }
 
@@ -185,6 +191,9 @@ export default class Game {
                 break;
             case 'bomb':
                 sound.src = 'assets/sound/explosion.mp3';
+                break;
+            case 'win':
+                sound.src = 'assets/sound/windows-3_1-tada.mp3';
                 break;
             default:
                 alert("Это не выполнится");
@@ -233,12 +242,35 @@ export default class Game {
                 break;
         }
     }
-
     // устанавливает в закладке УРЛа новое состояние приложения
     // и затем устанавливает+отображает это состояние
     switchToState(newState) {
         var stateStr = newState.pagename;
         location.hash = stateStr;
+    }
+
+    checkRemainingCells() {
+        const remainingCells = this.items.filter(item =>
+            !item.classList.contains('open') &&
+            !item.classList.contains('bomb') &&
+            !item.classList.contains('flag')
+        );
+        if (remainingCells.length === 0) {
+            if (!this.isMuted) {
+                this.playAudio('win');
+            }
+            this.view.showModalWindow('Win');
+            this.stopTimer();
+            const time = document.querySelector('.time').textContent;
+            localStorage.setItem('time', time)
+            localStorage.setItem('moves', this.moves);
+            if (this.results.length >= 10) {
+                this.results.shift();
+            }
+            const newResult = { 'time': localStorage.getItem('time'), 'moves': localStorage.getItem('moves') };
+            this.results.push(newResult)
+            this.view.getResults(newResult)
+        }
     }
 }
 

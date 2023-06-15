@@ -89,7 +89,7 @@ export default class Controllers {
             return;
         }
         const index = items.indexOf(e.target);
-        this.model.initCell(index, items)
+        this.model.initCell(index)
     }
 
     rightClickCellHandler(e) {
