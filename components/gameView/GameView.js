@@ -1,6 +1,6 @@
-export default class Main {
+export default class GameView {
     constructor(model) {
-        this.main = null;
+        this.gameContainer = null;
         this.model = model;
         this.moves = null;
         this.playField = null;
@@ -8,8 +8,8 @@ export default class Main {
     }
 
     create() {
-        this.main = document.createElement('main');
-        this.main.classList.add('main');
+        this.gameContainer = document.createElement('div');
+        this.gameContainer.classList.add('game-container');
         const controls = document.createElement('div');
         controls.classList.add('controls');
         const time = document.createElement('div');
@@ -21,26 +21,29 @@ export default class Main {
         movesCont.textContent = 'Moves: ';
         this.moves = document.createElement('div');
         this.moves.classList.add('moves')
-        // const soundBtn = document.createElement('button');
-        // soundBtn.classList.add('sound');
         const flag = document.createElement('div');
         flag.classList.add('flag')
         const flagCounter = document.createElement('div');
         flagCounter.classList.add('flag-counter')
-        flagCounter.textContent = this.model.bombsNum;
+        flagCounter.textContent = this.model._bombsNum;
         controls.append(time, this.timeValue, flag, flagCounter, movesCont, this.moves);
         this.playField = document.createElement('div');
         this.playField.classList.add('play-field');
-        this.main.append(controls, this.playField);
-        this.createField(10);
+        const btnRestart = document.createElement('button');
+        btnRestart.classList.add('btn', 'btn-restart');
+        btnRestart.textContent = 'Restart';
+        this.gameContainer.append(controls, this.playField, btnRestart);
+        this.createField(this.model._size);
     }
 
     getElement() {
         this.create();
-        return this.main;
+        return this.gameContainer;
     }
 
     createField(size) {
+        console.log(this.model)
+        this.playField.innerHTML='';
         this.model.startTimer();
         // modalContainer.classList.remove('visible');
         this.moves.textContent = this.model.moves;

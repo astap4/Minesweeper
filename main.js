@@ -14,3 +14,4 @@ controllers.start(game);
 
 game.updateView();
 controllers.addListeners();
+window.onhashchange = game.switchToStateFromURLHash.bind(game);

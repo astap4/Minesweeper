@@ -1,43 +1,5 @@
 
-const SIZES = [10, 15, 25];
 let results = [];
-
-// const toggleTheme = document.createElement('div');
-// toggleTheme.classList.add('toggler');
-// const checkInput = document.createElement('input');
-// checkInput.type = 'checkbox';
-// checkInput.id = 'toggleCheckbox';
-// const checkLabel = document.createElement('label');
-// checkLabel.setAttribute('for', 'toggleCheckbox');
-// checkLabel.classList.add('toggle-label');
-// const onLabel = document.createElement('span');
-// onLabel.textContent = 'Dark';
-// const offLabel = document.createElement('span');
-// offLabel.textContent = 'Light';
-// toggleTheme.append(onLabel, checkInput, checkLabel, offLabel)
-
-// const soundBtn = document.createElement('button');
-// soundBtn.classList.add('sound');
-// const customDropdown = document.createElement('span');
-// customDropdown.classList.add('custom-dropdown');
-// customDropdown.textContent = 'Size ';
-// const minesAmount = document.createElement('div');
-// minesAmount.classList.add('mines-container')
-// const selectSize = document.createElement('select');
-// customDropdown.append(selectSize);
-// const minesInput = document.createElement('input');
-// const minesValue = document.createElement('span');
-// createMinesOptions();
-
-minesInput.addEventListener('input', function () {
-  minesValue.textContent = minesInput.value;
-  bombsNum = parseInt(minesInput.value)
-});
-
-minesAmount.append(minesInput, minesValue)
-// createSizeOptions();
-// menuContainer.append(time, timeValue, flag, flagCounter, movesCont, moves, soundBtn);
-
 
 checkInput.addEventListener('change', () => changeTheme(checkInput.checked));
 
@@ -52,28 +14,6 @@ function changeTheme(isChecked) {
     items.forEach((item) => item.classList.remove('dark'))
   }
 }
-
-// function createSizeOptions() {
-//   SIZES.forEach(num => {
-//     const optionSize = document.createElement('option');
-//     optionSize.textContent = `${num} x ${num}`;
-//     optionSize.value = `${num}`;
-//     if (num === 10) {
-//       optionSize.selected = true;
-//     }
-//     selectSize.append(optionSize);
-//   });
-// }
-
-// function createMinesOptions() {
-//   minesAmount.textContent = 'Mines ';
-//   minesInput.type = 'range';
-//   minesInput.min = 10;
-//   minesInput.max = 99;
-//   minesInput.step = 1;
-//   minesInput.value = 10;
-//   minesValue.textContent = minesInput.value;
-// }
 
 document.addEventListener('DOMContentLoaded', () => {
   btnStart.addEventListener('click', () => {

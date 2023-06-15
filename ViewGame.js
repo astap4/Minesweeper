@@ -1,10 +1,19 @@
-import Header from './components/header/Header.js';
-import Main from './components/main/Main.js';
-
+import Header from './components/header/HeaderView.js';
+import GameView from './components/gameView/GameView.js';
+import Settings from './components/settings/Settings.js';
+import HeaderView from './components/header/HeaderView.js';
+import RulesView from './components/rulesView/RulesView.js';
+import RecordsView from './components/recordsView/RecordsView.js';
 export default class ViewGame {
     constructor() {
         this.model = null;
-        this.field = null;
+        this.header = null;
+        this.main = null;
+        this.gameView = null;
+        this.settings = null;
+        this.rules = null;
+        this.records = null;
+        this.bodyContainer = null;
         this.COLORS = {
             '0': 'transparent',
             '1': 'blue',
@@ -21,68 +30,32 @@ export default class ViewGame {
     }
 
     build() {
-        const bodyContainer = document.createElement('div');
-        bodyContainer.classList.add('container');
-        const modalContainer = document.createElement('div');
-        modalContainer.classList.add('modal');
-        document.body.append(modalContainer, bodyContainer,);
-
-        const modalWindow = document.createElement('div');
-        modalWindow.classList.add('modal-window');
-        modalContainer.append(modalWindow);
-
-        const header = new Header();
-        const main = new Main(this.model);
-        bodyContainer.append(header.getElement(), main.getElement())
-
-
-        // const toggleTheme = document.createElement('div');
-        // toggleTheme.classList.add('toggler');
-        // const checkInput = document.createElement('input');
-        // checkInput.type = 'checkbox';
-        // checkInput.id = 'toggleCheckbox';
-        // const checkLabel = document.createElement('label');
-        // checkLabel.setAttribute('for', 'toggleCheckbox');
-        // checkLabel.classList.add('toggle-label');
-        // const onLabel = document.createElement('span');
-        // onLabel.textContent = 'Dark';
-        // const offLabel = document.createElement('span');
-        // offLabel.textContent = 'Light';
-        // toggleTheme.append(onLabel, checkInput, checkLabel, offLabel)
-        // const customDropdown = document.createElement('span');
-        // customDropdown.classList.add('custom-dropdown');
-        // customDropdown.textContent = 'Size ';
-        // const minesAmount = document.createElement('div');
-        // minesAmount.classList.add('mines-container')
-        // const selectSize = document.createElement('select');
-        // customDropdown.append(selectSize);
-        // const minesInput = document.createElement('input');
-        // const minesValue = document.createElement('span');
-        // this.createMinesOptions();
-        // this.createSizeOptions();
+        if (this.bodyContainer) {
+            this.updateField();
+        } else {
+            this.bodyContainer = document.createElement('div');
+            this.bodyContainer.classList.add('container');
+            const modalContainer = document.createElement('div');
+            modalContainer.classList.add('modal');
+            document.body.append(modalContainer, this.bodyContainer);
+            const modalWindow = document.createElement('div');
+            modalWindow.classList.add('modal-window');
+            modalContainer.append(modalWindow);
+            this.main = document.createElement('main');
+            this.main.classList.add('main');
+            this.header = new HeaderView();
+            const headerElem = this.header.getElement();
+            this.gameView = new GameView(this.model);
+            const gameElem = this.gameView.getElement();
+            this.main.append(gameElem)
+            console.log(this.main)
+            this.bodyContainer.append(headerElem, this.main)
+        }
 
     }
 
-    createMinesOptions() {
-        minesAmount.textContent = 'Mines ';
-        minesInput.type = 'range';
-        minesInput.min = 10;
-        minesInput.max = 99;
-        minesInput.step = 1;
-        minesInput.value = 10;
-        minesValue.textContent = minesInput.value;
-    }
-
-    createSizeOptions() {
-        SIZES.forEach(num => {
-            const optionSize = document.createElement('option');
-            optionSize.textContent = `${num} x ${num}`;
-            optionSize.value = `${num}`;
-            if (num === 10) {
-                optionSize.selected = true;
-            }
-            selectSize.append(optionSize);
-        });
+    updateField() {
+        this.gameView.createField(this.model._size)
     }
 
     updateTime(minutes, seconds) {
@@ -106,9 +79,75 @@ export default class ViewGame {
         element.classList.add('bomb');
     }
 
-    updateFlags(bombsNum) {
-        const flagCounter = document.querySelector('.flag-counter')
-        flagCounter.textContent = bombsNum;
+    updateFlags(num) {
+        const minesValue = document.querySelector('.mines-value');
+        if (minesValue)
+            minesValue.textContent = this.model._bombsNum;
+        else {
+            const flagCounter = document.querySelector('.flag-counter')
+            flagCounter.textContent = num;
+        }
+    }
+
+    showModalWindow() {
+        const modalContainer = document.querySelector('.modal');
+        const modalWindow = document.querySelector('.modal-window');
+        modalContainer.classList.add('visible');
+        modalWindow.textContent = 'GAME OVER. TRY AGAIN';
+    }
+
+    showGamePage() {
+        const gameContainer = document.querySelector('.game-container');
+        gameContainer.classList.remove('hidden')
+        const lastElement = this.main.lastChild;
+        if (lastElement != gameContainer) {
+            this.main.removeChild(lastElement);
+        }
+    }
+
+    showSettingsPage() {
+        const gameContainer = document.querySelector('.game-container');
+        gameContainer.classList.add('hidden');
+        const lastElement = this.main.lastChild;
+        if (lastElement != gameContainer) {
+            this.main.removeChild(lastElement);
+        }
+        if (this.settings) {         
+            this.main.append(this.settings)
+        } else {
+            this.settings = new Settings(this.model).getElement()
+            this.main.append(this.settings)
+        }
+    }
+
+    showRulesPage() {
+        const gameContainer = document.querySelector('.game-container');
+        gameContainer.classList.add('hidden');
+        const lastElement = this.main.lastChild;
+        if (lastElement != gameContainer) {
+            this.main.removeChild(lastElement);
+        }
+        if (this.rules) {         
+            this.main.append(this.rules)
+        } else {
+            this.rules = new RulesView(this.model).getElement()
+            this.main.append(this.rules)
+        }
+    }
+
+    showRecordsPage() {
+        const gameContainer = document.querySelector('.game-container');
+        gameContainer.classList.add('hidden');
+        const lastElement = this.main.lastChild;
+        if (lastElement != gameContainer) {
+            this.main.removeChild(lastElement);
+        }
+        if (this.records) {         
+            this.main.append(this.records)
+        } else {
+            this.records = new RecordsView(this.model).getElement()
+            this.main.append(this.records)
+        }
     }
 
 }

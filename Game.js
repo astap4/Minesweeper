@@ -1,14 +1,17 @@
+
 export default class Game {
     constructor() {
         this.view = null;
-        this.size = 10;
-        this.bombsNum = 10;
+        this.sizes = [10, 15, 20];
+        this._size = 15;
+        this._bombsNum = 10;
         this.timer = null;
         this.moves = 0;
         this.seconds = 0;
         this.minutes = 0;
         this.matrix = [];
         this.isMuted = false;
+        this.SPAState = {};
     }
 
     start(view) {
@@ -20,10 +23,29 @@ export default class Game {
             this.view.build();
     }
 
+    set bombsNum(value) {
+        this._bombsNum = value;
+        this.view.updateFlags()
+    }
+
+    set size(value) {
+        this._size = value;
+    }
+
+    restart() {
+        this.stopTimer()
+        this.view.build();
+        this.moves = 0;
+        this.view.updateTime(this.minutes, this.seconds);
+        this.view.updateFlags(this._bombsNum);;
+        this.view.updateMoves(this.moves);
+    }
+
     getEmptyMatrix() {
-        for (let i = 0; i < this.size; i++) {
+        this.matrix = [];
+        for (let i = 0; i < this._size; i++) {
             let row = [];
-            for (let j = 0; j < this.size; j++) {
+            for (let j = 0; j < this._size; j++) {
                 row.push(0);
             }
             this.matrix.push(row);
@@ -32,9 +54,9 @@ export default class Game {
 
     placeBombs() {
         const BOMB = -1;
-        for (let i = 0; i < this.bombsNum; i++) {
-            let x = Math.floor(Math.random() * this.size);
-            let y = Math.floor(Math.random() * this.size);
+        for (let i = 0; i < this._bombsNum; i++) {
+            let x = Math.floor(Math.random() * this._size);
+            let y = Math.floor(Math.random() * this._size);
             if (this.matrix[x][y] !== BOMB) {
                 this.matrix[x][y] = BOMB;
                 for (let i = -1; i <= 1; i++) {
@@ -61,7 +83,7 @@ export default class Game {
     }
 
     isValid(x, y) {
-        if (x >= 0 && y >= 0 && x < this.size && y < this.size) {
+        if (x >= 0 && y >= 0 && x < this._size && y < this._size) {
             return true
         };
         return false;
@@ -89,8 +111,8 @@ export default class Game {
     }
 
     initCell(cellNum, items) {
-        const x = Math.floor(cellNum / this.size);
-        const y = cellNum % this.size;
+        const x = Math.floor(cellNum / this._size);
+        const y = cellNum % this._size;
         this.moves++;
         if (!this.isMuted) {
             this.playAudio('click');
@@ -102,7 +124,7 @@ export default class Game {
         const BOMB = -1;
         const EMPTY = 0;
         this.view.updateMoves(this.moves);
-        const index = x * this.size + y;
+        const index = x * this._size + y;
         const currItem = items[index];
         if (!currItem || currItem.classList.contains('open')) {
             return;
@@ -115,10 +137,8 @@ export default class Game {
             if (!this.isMuted) {
                 this.playAudio('bomb');
             }
-            //   modalContainer.classList.add('visible');
-            //   modalWindow.textContent = 'GAME OVER. TRY AGAIN';
-            //   modalWindow.append(btnStart)
             this.stopTimer();
+            this.view.showModalWindow();
         } else if (value === EMPTY) {
             currItem.textContent = value;
             const neighbors = [];
@@ -140,17 +160,15 @@ export default class Game {
     }
 
     openFlag(elem) {
+        const flagCounter = document.querySelector('.flag-counter')
+        const flagNum = Number(flagCounter.textContent)
         if (!elem.classList.contains('open')) {
             if (elem.classList.contains('flag')) {
                 elem.classList.remove('flag');
-                this.bombsNum++;
-                this.view.updateFlags(this.bombsNum);
-                // flagCounter.textContent = Number(flagCounter.textContent) + 1;
+                this.view.updateFlags(flagNum + 1);
             } else {
                 elem.classList.add('flag');
-                this.bombsNum--;
-                this.view.updateFlags(this.bombsNum);
-                // flagCounter.textContent = Number(flagCounter.textContent) - 1;
+                this.view.updateFlags(flagNum - 1);
             }
             if (!this.isMuted) {
                 this.playAudio('click');
@@ -173,11 +191,54 @@ export default class Game {
         }
         sound.play();
     }
-    // soundBtn.addEventListener('click', toggleVolume)
+
 
     toggleVolume() {
-        this.isMuted = !isMuted;
+        const soundBtn = document.querySelector('.sound');
+        this.isMuted = !this.isMuted;
         soundBtn.classList.toggle('off');
+    }
+
+    switchToStateFromURLHash() {
+        console.log('hello')
+        const URLHash = window.location.hash;
+        console.log(URLHash)
+        // убираем из закладки УРЛа решётку
+        // (по-хорошему надо ещё убирать восклицательный знак, если есть)
+        const stateStr = URLHash.substring(1);
+
+        if (stateStr != "") { // если закладка непустая, читаем из неё состояние и отображаем
+            const parts = stateStr.split("_")
+            this.SPAState = { pagename: parts[0] }; // первая часть закладки - номер страницы
+        }
+        // else
+        //     this.SPAState = { pagename: 'Game' }; // иначе показываем главную страницу
+
+        console.log('Новое состояние приложения:');
+        console.log(this.SPAState);
+        // обновляем вариабельную часть страницы под текущее состояние
+        // это реализация View из MVC - отображение состояния модели в HTML-код
+        switch (this.SPAState.pagename) {
+            case 'Game':
+                this.view.showGamePage();
+                break;
+            case 'Records':
+                this.view.showRecordsPage();
+                break;
+            case 'Rules':
+                this.view.showRulesPage();
+                break;
+            case 'Settings':
+                this.view.showSettingsPage();
+                break;
+        }
+    }
+
+    // устанавливает в закладке УРЛа новое состояние приложения
+    // и затем устанавливает+отображает это состояние
+    switchToState(newState) {
+        var stateStr = newState.pagename;
+        location.hash = stateStr;
     }
 }
 

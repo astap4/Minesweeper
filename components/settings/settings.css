@@ -1,0 +1,82 @@
+.settings-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap:6%;
+    margin: 0 auto;
+    padding: 5%;
+    max-width: 600px;
+    height: 50vh;
+    background-color: rgb(242, 242, 242);
+    box-shadow: 0px 4px 3px rgba(13, 96, 111, 0.25);
+    border-radius: 10px;
+}
+
+.mines-container>input {
+    cursor: pointer;
+}
+
+input[type="checkbox"] {
+    display: none;
+}
+
+.toggler {
+    display: flex;
+    align-items: center;
+    gap: 2%;
+}
+
+.toggle-label {
+    display: inline-block;
+    position: relative;
+    border-radius: 15px;
+    width: 60px;
+    height: 30px;
+    background-color: #ccc;
+    cursor: pointer;
+}
+
+.toggle-label::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 27px;
+    height: 27px;
+    background-color: #fff;
+    border-radius: 50%;
+    transition: transform 0.3s ease;
+}
+
+input[type="checkbox"]:checked+.toggle-label::before {
+    transform: translateX(26px);
+    background-color: rgb(41, 40, 40);
+}
+
+.sound {
+    background-image: url("../../assets/icons/sound-on.svg");
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.sound::before {
+    content: 'Sound';
+    display: inline-block;
+    font-size: 16px;
+    margin-left: -80px;
+    top: -30px;
+}
+
+.sound.off {
+    background-image: url("../../assets/icons/sound-off.png");
+}
