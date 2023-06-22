@@ -19,6 +19,7 @@ export default class Controllers {
         const btnSettings = document.querySelector('.btn-settings');
         const btnRules = document.querySelector('.btn-rules');
         const btnRecords = document.querySelector('.btn-records');
+        const btnSave = document.querySelector('.btn-save');
         playField.addEventListener('click', this.leftClickCellHandler.bind(this));
         playField.addEventListener('contextmenu', this.rightClickCellHandler.bind(this));
         modalWindow.addEventListener('click', this.closeModalWindow.bind(this));
@@ -27,6 +28,7 @@ export default class Controllers {
         btnSettings.addEventListener('click', this.openSettings.bind(this));
         btnRules.addEventListener('click', this.openRules.bind(this));
         btnRecords.addEventListener('click', this.openRecords.bind(this));
+        btnSave.addEventListener('click', this.saveResults.bind(this));
     }
 
     addSettingsListeners() {
@@ -38,7 +40,7 @@ export default class Controllers {
             this.btnStart.addEventListener('click', this.startNewGame.bind(this));
             this.minesInput.addEventListener('input', this.changeBombsNum.bind(this));
             this.soundBtn.addEventListener('click', this.toggleVolume.bind(this))
-            this.selectSize.addEventListener('change', this.changeSize.bind(this))
+            this.selectSize.addEventListener('change', this.changeSize.bind(this));
         }
     }
 
@@ -75,7 +77,7 @@ export default class Controllers {
 
     closeModalWindow(e) {
         const modalWindow = document.querySelector('.modal')
-        if (e.target.classList.contains('modal-window')) {
+        if (e.target.closest('.modal-window')) {
             return;
         }
         modalWindow.classList.remove('visible');
@@ -108,5 +110,9 @@ export default class Controllers {
 
     toggleVolume() {
         this.model.toggleVolume();
+    }
+
+    saveResults() {
+        this.model.storeInfo();
     }
 }

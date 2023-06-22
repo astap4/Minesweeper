@@ -3,9 +3,11 @@ import Settings from './components/settings/Settings.js';
 import HeaderView from './components/headerView/HeaderView.js';
 import RulesView from './components/rulesView/RulesView.js';
 import RecordsView from './components/recordsView/RecordsView.js';
+import ModalWindowView from './components/modalWindow/ModalWindow.js';
 export default class ViewGame {
     constructor() {
         this.model = null;
+        this.modalWindow = null;
         this.header = null;
         this.main = null;
         this.gameView = null;
@@ -34,12 +36,9 @@ export default class ViewGame {
         } else {
             this.bodyContainer = document.createElement('div');
             this.bodyContainer.classList.add('container');
-            const modalContainer = document.createElement('div');
-            modalContainer.classList.add('modal');
-            document.body.append(modalContainer, this.bodyContainer);
-            const modalWindow = document.createElement('div');
-            modalWindow.classList.add('modal-window');
-            modalContainer.append(modalWindow);
+            this.modalWindow = new ModalWindowView();
+            const modalElem = this.modalWindow.getElement();
+            document.body.append(modalElem, this.bodyContainer);
             this.main = document.createElement('main');
             this.main.classList.add('main');
             this.header = new HeaderView();
@@ -89,15 +88,13 @@ export default class ViewGame {
 
     showModalWindow(result) {
         const modalContainer = document.querySelector('.modal');
-        const modalWindow = document.querySelector('.modal-window');
-        const time = document.querySelector('.time').textContent;
         modalContainer.classList.add('visible');
         switch (result) {
             case 'Win':
-                modalWindow.textContent = `Hooray! You found all mines in ${time} and ${this.model.moves} moves!`;
+                this.modalWindow.showWin();
                 break;
             case 'Loss':
-                modalWindow.textContent = 'GAME OVER. TRY AGAIN';
+                this.modalWindow.showLose();
                 break;
         }
     }

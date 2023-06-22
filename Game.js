@@ -14,6 +14,9 @@ export default class Game {
         this.items = null;
         this.results = [];
         this.SPAState = {};
+        this.ajaxHandlerScript = "http://fe.it-academy.by/AjaxStringStorage2.php";
+        this.stringName = 'ASTAP_MINESWEEPER_RESULTS';
+        this.updatePassword = 0;
     }
 
     start(view) {
@@ -213,7 +216,6 @@ export default class Game {
         const URLHash = window.location.hash;
         console.log(URLHash)
         // убираем из закладки УРЛа решётку
-        // (по-хорошему надо ещё убирать восклицательный знак, если есть)
         const stateStr = URLHash.substring(1);
 
         if (stateStr != "") { // если закладка непустая, читаем из неё состояние и отображаем
@@ -271,6 +273,72 @@ export default class Game {
             this.results.push(newResult)
             this.view.getResults(newResult)
         }
+    }
+
+    //AJAX
+    storeInfo() {
+        this.updatePassword = Math.random();
+        
+        $.ajax({
+            url: this.ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
+            data: { f: 'LOCKGET', n: this.stringName, p: this.updatePassword },
+            success: this.lockGetReady, error: this.errorHandler
+        }
+        );
+    }
+
+    lockGetReady(callresult) {
+        console.log(callresult)
+        if (callresult.error != undefined) {
+            console.log(document.getElementById('IName').value)
+            alert(callresult.error);
+        }
+        else {
+            console.log('hello')
+            const info = {
+                name: document.getElementById('IName').value,
+            };
+
+            $.ajax({
+                url: this.ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
+                data: {
+                    f: 'UPDATE', n: this.stringName,
+                    v: JSON.stringify(info), p: this.updatePassword
+                },
+                success: this.updateReady, error: this.errorHandler
+            }
+            );
+        }
+    }
+
+    updateReady(callresult) {
+        if (callresult.error != undefined)
+            alert(callresult.error);
+    }
+
+    restoreInfo() {
+        $.ajax(
+            {
+                url: this.ajaxHandlerScript, type: 'POST', cache: false, dataType: 'json',
+                data: { f: 'READ', n: this.stringName },
+                success: this.readReady, error: this.errorHandler
+            }
+        );
+    }
+
+    readReady(callresult) {
+        console.log(callresult.error)
+        if (callresult.error != undefined)
+            alert(callresult.error);
+        else if (callresult.result != "") {
+            const info = JSON.parse(callresult.result);
+            document.getElementById('IName').value = info.name;
+            console.log(info.name)
+        }
+    }
+
+    errorHandler(jqXHR, statusStr, errorStr) {
+        alert(statusStr + ' ' + errorStr);
     }
 }
 

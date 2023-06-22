@@ -1,6 +1,7 @@
 export default class RecordsView {
-    constructor() {
+    constructor(model) {
         this.records = null;
+        this.model = model;
     }
 
     create() {
@@ -8,7 +9,8 @@ export default class RecordsView {
         const title = document.createElement('h3');
         title.textContent = 'Records';
         const recordsContent = document.createElement('div');
-        this.records.append(title, recordsContent)
+        this.records.append(title, recordsContent);
+        // this.model.restoreInfo()
     }
 
     getElement() {
