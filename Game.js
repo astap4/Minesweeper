@@ -14,7 +14,7 @@ export default class Game {
         this.items = null;
         this.results = [];
         this.SPAState = {};
-        this.ajaxHandlerScript = "http://fe.it-academy.by/AjaxStringStorage2.php";
+        this.ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
         this.stringName = 'ASTAP_MINESWEEPER_RESULTS';
         this.updatePassword = 0;
     }
