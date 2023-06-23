@@ -2,6 +2,7 @@
 @import url("./components/playFieldView/playFieldView.css");
 @import url("./components/settingsView/settings.css");
 @import url("./components/recordsView/records.css");
+@import url("./components/rulesView/rules.css");
 
 * {
     box-sizing: border-box;

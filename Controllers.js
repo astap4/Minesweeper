@@ -10,6 +10,9 @@ export default class Controllers {
         this.soundBtn = null;
         this.selectSize = null;
         this.music = this.model.music;
+        this.touchX = 0;
+        this.touchY = 0;
+        this.flag = null;
     }
 
     addListeners() {
@@ -21,6 +24,7 @@ export default class Controllers {
         const btnRules = document.querySelector('.btn-rules');
         const btnRecords = document.querySelector('.btn-records');
         const btnSave = document.querySelector('.btn-save');
+        this.flag = document.querySelector('.flag-img');
         playField.addEventListener('click', this.leftClickCellHandler.bind(this));
         playField.addEventListener('contextmenu', this.rightClickCellHandler.bind(this));
         modalWindow.addEventListener('click', this.closeModalWindow.bind(this));
@@ -31,10 +35,11 @@ export default class Controllers {
         btnRecords.addEventListener('click', this.openRecords.bind(this));
         btnSave.addEventListener('click', this.saveResults.bind(this));
         this.music.addEventListener('ended', this.restartMusic.bind(this));
-        playField.addEventListener('dragover', (event) => {
-            event.preventDefault();
-        });
+        playField.addEventListener('dragover', (event) => {event.preventDefault()});
         playField.addEventListener('drop', this.dropElement.bind(this));
+        this.flag.addEventListener('touchstart', this.touchStart.bind(this));
+        this.flag.addEventListener('touchmove', this.touchMove.bind(this));
+        this.flag.addEventListener('touchend', this.touchEnd.bind(this));
     }
 
     addSettingsListeners() {
@@ -143,5 +148,30 @@ export default class Controllers {
     saveResults() {
         this.model.storeInfo();
         this.closeModalAfterSave()
+    }
+
+    touchStart(event) {
+        const touch = event.touches[0];
+        this.touchX = touch.clientX;
+        this.touchY = touch.clientY;
+        event.preventDefault();
+    }
+
+    touchMove(event) {
+        const touch = event.touches[0];
+        const offsetX = touch.clientX - this.touchX;
+        const offsetY = touch.clientY - this.touchY;
+        this.flag.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+        event.preventDefault();
+    }
+
+    touchEnd(event) {
+        const touch = event.changedTouches[0];
+        this.flag.style.transform = 'translate(0, 0)';
+        const offsetX = touch.clientX;
+        const offsetY = touch.clientY;
+        console.log(offsetX, offsetY)
+        this.model.checkCurrCell(offsetX, offsetY)
+        event.preventDefault();
     }
 }

@@ -1,5 +1,5 @@
 
-export default class Game {
+export default class GameModel {
     constructor() {
         this.view = null;
         this.sizes = [10, 15, 20];
@@ -368,15 +368,30 @@ export default class Game {
         if (callresult.error !== undefined) {
             alert(callresult.error);
         } else if (callresult.result !== "") {
-            console.log(callresult.result)
             const info = JSON.parse(callresult.result);
-            console.log(info.name);
             this.results = info;
         }
     }
 
     errorHandler(jqXHR, statusStr, errorStr) {
         alert(statusStr + ' ' + errorStr);
+    }
+
+    checkCurrCell(x, y) {
+        const playField = document.querySelector('.play-field');
+        const playFieldRect = playField.getBoundingClientRect();
+        const playFieldX = playFieldRect.left;
+        const playFieldY = playFieldRect.top;
+        const relativeX = x - playFieldX;
+        const relativeY = y - playFieldY;
+        const cellSize = playFieldRect.width / this._size;
+        const columnIndex = Math.floor(relativeX / cellSize);
+        const rowIndex = Math.floor(relativeY / cellSize);
+        const cells = playField.querySelectorAll('.item');
+        const numColumns = Math.sqrt(cells.length); 
+        const cellIndex = rowIndex * numColumns + columnIndex;
+        const targetCell = cells[cellIndex];
+        this.openFlag(targetCell)
     }
 }
 

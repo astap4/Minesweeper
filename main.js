@@ -1,9 +1,9 @@
-import Game from './Game.js';
+import GameModel from './GameModel.js';
 import ViewGame from './ViewGame.js';
 import Controllers from './Controllers.js';
 
 // создаём все три компонента
-const game = new Game();
+const game = new GameModel();
 const view = new ViewGame();
 const controllers = new Controllers();
 

@@ -17,7 +17,7 @@
     width: 100px;
     height: 40px;
     border: none;
-    background: #f0a338;
+    background-color: #f0a338;
     box-shadow: 0 0.5px 1px rgba(0, 0, 0, 0.1);
     color: rgb(33, 33, 33);
     font-weight: 800;
@@ -55,6 +55,7 @@
   }
 
 .btn:hover {
-    background: #fbc170;
+    background-color: #fbc170;
     box-shadow: 0px 4px 3px rgba(13, 96, 111, 0.25);
+    transition: background-color 0.6s;
 }
