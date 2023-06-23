@@ -11,6 +11,8 @@ export default class Game {
         this.minutes = 0;
         this.matrix = [];
         this.isMuted = false;
+        this.isMusic = false;
+        this.music = new Audio();
         this.items = null;
         this.results = { 10: [], 15: [], 20: [] };
         this.SPAState = {};
@@ -28,7 +30,6 @@ export default class Game {
             this.view.build();
         const playField = document.querySelector('.play-field');
         this.items = [...playField.children];
-
     }
 
     set bombsNum(value) {
@@ -146,6 +147,9 @@ export default class Game {
             if (!this.isMuted) {
                 this.playAudio('bomb');
             }
+            if ('vibrate' in navigator) {
+                navigator.vibrate(100);
+            }
             this.stopTimer();
             this.view.showModalWindow('Loss');
         } else if (value === EMPTY) {
@@ -198,17 +202,41 @@ export default class Game {
             case 'win':
                 sound.src = 'assets/sound/windows-3_1-tada.mp3';
                 break;
+            // case 'music':
+            //     sound.src = 'assets/sound/music2.mp3';
+            //     break;
             default:
                 alert("Это не выполнится");
         }
         sound.play();
     }
 
+    playMusic() {
+        this.music.src = 'assets/sound/music2.mp3';
+        this.music.currentTime = 0;
+        this.music.play();
+    }
+
+    stopMusic() {
+        this.music.pause();
+        this.music.currentTime = 0;
+    }
 
     toggleVolume() {
         const soundBtn = document.querySelector('.sound');
         this.isMuted = !this.isMuted;
         soundBtn.classList.toggle('off');
+    }
+
+    toggleMusic() {
+        const musicBtn = document.querySelector('.music');
+        this.isMusic = !this.isMusic;
+        musicBtn.classList.toggle('off')
+        if (this.isMuted) {
+            this.playMusic()
+        } else {
+            this.stopMusic()
+        }
     }
 
     switchToStateFromURLHash() {
@@ -285,7 +313,10 @@ export default class Game {
 
     lockGetReady(callresult) {
         const time = document.querySelector('.time').textContent;
-        const recordName = document.getElementById('IName').value;
+        let recordName = document.getElementById('IName').value;
+        if (recordName.trim() === '') {
+            recordName = 'Unknown';
+        }
         const newResult = { 'name': recordName, 'time': time, 'moves': this.moves };
         this.results[this._size].push(newResult)
         if (this.results[this._size].length >= 10) {

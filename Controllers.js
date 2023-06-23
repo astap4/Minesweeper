@@ -9,6 +9,7 @@ export default class Controllers {
         this.btnStart = null;
         this.soundBtn = null;
         this.selectSize = null;
+        this.music = this.model.music;
     }
 
     addListeners() {
@@ -29,18 +30,24 @@ export default class Controllers {
         btnRules.addEventListener('click', this.openRules.bind(this));
         btnRecords.addEventListener('click', this.openRecords.bind(this));
         btnSave.addEventListener('click', this.saveResults.bind(this));
-        console.log(btnSave)
+        this.music.addEventListener('ended', this.restartMusic.bind(this));
+        playField.addEventListener('dragover', (event) => {
+            event.preventDefault();
+        });
+        playField.addEventListener('drop', this.dropElement.bind(this));
     }
 
     addSettingsListeners() {
         if (!this.btnStart) {
             this.btnStart = document.querySelector('.btn-start');
             this.soundBtn = document.querySelector('.sound');
+            this.musicBtn = document.querySelector('.music');
             this.minesInput = document.querySelector('.mines-input');
             this.selectSize = document.querySelector('.select-size');
             this.btnStart.addEventListener('click', this.startNewGame.bind(this));
             this.minesInput.addEventListener('input', this.changeBombsNum.bind(this));
             this.soundBtn.addEventListener('click', this.toggleVolume.bind(this))
+            this.musicBtn.addEventListener('click', this.toggleMusic.bind(this))
             this.selectSize.addEventListener('change', this.changeSize.bind(this));
         }
     }
@@ -107,6 +114,12 @@ export default class Controllers {
         this.model.openFlag(currElem)
     }
 
+    dropElement(e) {
+        e.preventDefault();
+        const currElem = e.target;
+        this.model.openFlag(currElem)
+    }
+
     changeBombsNum() {
         this.model.bombsNum = parseInt(this.minesInput.value)
     }
@@ -117,6 +130,14 @@ export default class Controllers {
 
     toggleVolume() {
         this.model.toggleVolume();
+    }
+
+    toggleMusic() {
+        this.model.toggleMusic();
+    }
+
+    restartMusic() {
+        this.model.playMusic();
     }
 
     saveResults() {

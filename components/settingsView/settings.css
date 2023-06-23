@@ -2,12 +2,13 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
     gap:6%;
     margin: 0 auto;
     padding: 5%;
     max-width: 600px;
-    height: 50vh;
+    height: 40vh;
     background-color: rgb(242, 242, 242);
     box-shadow: 0px 4px 3px rgba(13, 96, 111, 0.25);
     border-radius: 10px;
@@ -79,4 +80,31 @@ input[type="checkbox"]:checked+.toggle-label::before {
 
 .sound.off {
     background-image: url("../../assets/icons/sound-off.svg");
+}
+
+.music {
+    background-image: url("../../assets/icons/music-note.svg");
+    width: 30px;
+    height: 30px;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-color: transparent;
+    border: 0;
+    outline: 0;
+    opacity: 0.7;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.music.off {
+    background-image: url("../../assets/icons/muted-music-notes.svg");
+}
+
+.music::before {
+    content: 'Music';
+    display: inline-block;
+    font-size: 16px;
+    margin-left: -80px;
+    top: -30px;
 }

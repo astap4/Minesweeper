@@ -23,6 +23,11 @@ export default class PlayFieldView {
         this.moves.classList.add('moves')
         const flag = document.createElement('div');
         flag.classList.add('flag')
+        const imgFlag = document.createElement('img');
+        imgFlag.classList.add('flag-img')
+        imgFlag.src = '../../assets/icons/flag2.png';
+        imgFlag.alt = 'Flag';
+        flag.append(imgFlag)
         const flagCounter = document.createElement('div');
         flagCounter.classList.add('flag-counter')
         flagCounter.textContent = this.model._bombsNum;
@@ -42,9 +47,8 @@ export default class PlayFieldView {
     }
 
     createField(size) {
-        this.playField.innerHTML='';
+        this.playField.innerHTML = '';
         this.model.startTimer();
-        // modalContainer.classList.remove('visible');
         this.moves.textContent = this.model.moves;
         this.playField.style.width = `${(size * 30)}px`
         this.playField.style.height = `${(size * 30)}px`
