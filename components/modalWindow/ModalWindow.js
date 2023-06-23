@@ -14,7 +14,7 @@ export default class ModalWindowView {
         this.modalText = document.createElement('p');
         this.modalInput = document.createElement('div');
         this.modalInput.classList.add('modal-input');       
-        this.modalInput.innerHTML += `Name:<input type=text  id='IName'><input type=button class='btn btn-save' value='Save'>`
+        this.modalInput.innerHTML = `Name:<input type=text  id='IName'><input type=button class='btn btn-save' value='Save'>`
         modalWindow.append(this.modalText, this.modalInput)
         this.modal.append(modalWindow);
     }
@@ -25,6 +25,7 @@ export default class ModalWindowView {
     }
 
     showWin() {
+        document.getElementById('IName').value = '';
         this.modalInput.classList.remove('hidden');
         this.modalText.textContent = `Hooray! You found all mines!`;
     }

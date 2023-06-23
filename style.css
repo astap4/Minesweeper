@@ -1,6 +1,7 @@
 @import url("./components/headerView/header.css");
 @import url("./components/playFieldView/playFieldView.css");
-@import url("./components/Settings/settings.css");
+@import url("./components/settingsView/settings.css");
+@import url("./components/recordsView/records.css");
 
 * {
     box-sizing: border-box;

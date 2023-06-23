@@ -1,5 +1,5 @@
 import PlayFieldView from './components/playFieldView/PlayFieldView.js';
-import Settings from './components/settings/Settings.js';
+import Settings from './components/settingsView/Settings.js';
 import HeaderView from './components/headerView/HeaderView.js';
 import RulesView from './components/rulesView/RulesView.js';
 import RecordsView from './components/recordsView/RecordsView.js';
@@ -146,22 +146,13 @@ export default class ViewGame {
             this.main.removeChild(lastElement);
         }
         if (this.records) {
-            this.main.append(this.records)
+            const recordsElem = this.records.getElement();
+            this.records.updateRecords()
+            this.main.append(recordsElem)
         } else {
-            this.records = new RecordsView(this.model).getElement()
-            this.main.append(this.records)
+            this.records = new RecordsView(this.model);
+            const recordsElem = this.records.getElement();
+            this.main.append(recordsElem)
         }
     }
-
-    getResults(newResult) {
-        const result = document.createElement('div')
-        result.textContent = `Time: ${newResult.time} Moves: ${newResult.moves} `;
-        if (this.records) {
-            this.records.append(result)
-        } else {
-            this.records = new RecordsView(this.model).getElement()
-            this.records.append(result)
-        }
-    }
-
 }

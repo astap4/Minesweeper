@@ -29,6 +29,7 @@ export default class Controllers {
         btnRules.addEventListener('click', this.openRules.bind(this));
         btnRecords.addEventListener('click', this.openRecords.bind(this));
         btnSave.addEventListener('click', this.saveResults.bind(this));
+        console.log(btnSave)
     }
 
     addSettingsListeners() {
@@ -67,12 +68,12 @@ export default class Controllers {
 
     openRules() {
         this.model.switchToState({ pagename: 'Rules' });
-        this.model.switchToStateFromURLHash(); 
+        this.model.switchToStateFromURLHash();
     }
 
     openRecords() {
         this.model.switchToState({ pagename: 'Records' });
-        this.model.switchToStateFromURLHash(); 
+        this.model.switchToStateFromURLHash();
     }
 
     closeModalWindow(e) {
@@ -80,6 +81,12 @@ export default class Controllers {
         if (e.target.closest('.modal-window')) {
             return;
         }
+        modalWindow.classList.remove('visible');
+        this.model.restart();
+    }
+
+    closeModalAfterSave() {
+        const modalWindow = document.querySelector('.modal')
         modalWindow.classList.remove('visible');
         this.model.restart();
     }
@@ -114,5 +121,6 @@ export default class Controllers {
 
     saveResults() {
         this.model.storeInfo();
+        this.closeModalAfterSave()
     }
 }

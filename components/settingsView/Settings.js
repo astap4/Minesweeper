@@ -58,7 +58,7 @@ export default class Settings {
             const optionSize = document.createElement('option');
             optionSize.textContent = `${num} x ${num}`;
             optionSize.value = `${num}`;
-            if (num === 10) {
+            if (num === this.model._size) {
                 optionSize.selected = true;
             }
             elem.append(optionSize);

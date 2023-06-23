@@ -13,5 +13,6 @@ view.start(game);
 controllers.start(game);
 
 game.updateView();
+game.restoreInfo();
 controllers.addListeners();
 window.onhashchange = game.switchToStateFromURLHash.bind(game);
