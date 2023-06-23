@@ -14,6 +14,7 @@ export default class GameModel {
         this.isMusic = false;
         this.music = new Audio();
         this.items = null;
+        this.isChecked = false;
         this.results = { 10: [], 15: [], 20: [] };
         this.SPAState = {};
         this.ajaxHandlerScript = "https://fe.it-academy.by/AjaxStringStorage2.php";
@@ -190,6 +191,38 @@ export default class GameModel {
         }
     }
 
+    checkRemainingCells() {
+        const remainingCells = this.items.filter(item =>
+            !item.classList.contains('open') &&
+            !item.classList.contains('bomb') &&
+            !item.classList.contains('flag')
+        );
+        if (remainingCells.length === 0) {
+            if (!this.isMuted) {
+                this.playAudio('win');
+            }
+            this.view.showModalWindow('Win');
+            this.stopTimer();
+        }
+    }
+
+    checkCurrCell(x, y) {
+        const playField = document.querySelector('.play-field');
+        const playFieldRect = playField.getBoundingClientRect();
+        const playFieldX = playFieldRect.left;
+        const playFieldY = playFieldRect.top;
+        const relativeX = x - playFieldX;
+        const relativeY = y - playFieldY;
+        const cellSize = playFieldRect.width / this._size;
+        const columnIndex = Math.floor(relativeX / cellSize);
+        const rowIndex = Math.floor(relativeY / cellSize);
+        const cells = playField.querySelectorAll('.item');
+        const numColumns = Math.sqrt(cells.length);
+        const cellIndex = rowIndex * numColumns + columnIndex;
+        const targetCell = cells[cellIndex];
+        this.openFlag(targetCell)
+    }
+
     playAudio(type) {
         const sound = new Audio();
         switch (type) {
@@ -202,9 +235,6 @@ export default class GameModel {
             case 'win':
                 sound.src = 'assets/sound/windows-3_1-tada.mp3';
                 break;
-            // case 'music':
-            //     sound.src = 'assets/sound/music2.mp3';
-            //     break;
             default:
                 alert("Это не выполнится");
         }
@@ -232,16 +262,34 @@ export default class GameModel {
         const musicBtn = document.querySelector('.music');
         this.isMusic = !this.isMusic;
         musicBtn.classList.toggle('off')
-        if (this.isMuted) {
+        if (this.isMusic) {
             this.playMusic()
         } else {
             this.stopMusic()
         }
     }
 
+    changeTheme() {
+            const checkInput = document.getElementById('toggleCheckbox');
+            if(checkInput) {
+                this.isChecked = checkInput.checked;
+            }
+            const container = document.body;
+            const controls = document.querySelector('.controls')
+            const items = document.querySelectorAll('.item')
+            if (this.isChecked) {
+              items.forEach((item) => item.classList.add('dark'))
+              container.classList.add('dark');
+              controls.classList.add('dark');
+            } else {
+              container.classList.remove('dark');
+              controls.classList.remove('dark');
+              items.forEach((item) => item.classList.remove('dark'))
+            }
+    }
+//SPA
     switchToStateFromURLHash() {
         const URLHash = window.location.hash;
-        console.log(URLHash)
         // убираем из закладки УРЛа решётку
         const stateStr = URLHash.substring(1);
 
@@ -252,8 +300,6 @@ export default class GameModel {
         // else
         //     this.SPAState = { pagename: 'Game' }; // иначе показываем главную страницу
 
-        console.log('Новое состояние приложения:');
-        console.log(this.SPAState);
         // обновляем вариабельную часть страницы под текущее состояние
         // это реализация View из MVC - отображение состояния модели в HTML-код
         switch (this.SPAState.pagename) {
@@ -278,24 +324,28 @@ export default class GameModel {
         location.hash = stateStr;
     }
 
-    checkRemainingCells() {
-        const remainingCells = this.items.filter(item =>
-            !item.classList.contains('open') &&
-            !item.classList.contains('bomb') &&
-            !item.classList.contains('flag')
-        );
-        if (remainingCells.length === 0) {
-            if (!this.isMuted) {
-                this.playAudio('win');
-            }
-            this.view.showModalWindow('Win');
-            this.stopTimer();
-        }
-    }
-
     //AJAX
     storeInfo() {
+        let recordName = document.getElementById('IName').value;
+        if (recordName.trim() === '') {
+            recordName = 'Unknown';
+        }
         this.updatePassword = Math.random();
+        const newResult = {
+            name: recordName,
+            moves: this.moves,
+            minutes: this.minutes,
+            seconds: this.seconds
+        };
+
+        this.results[this._size].push(newResult);
+        console.log(this.results[this._size])
+        this.results[this._size].sort(this.sortByTime);
+        // Проверка и удаление лишних результатов, если нужно
+        if (this.results[this._size].length > 10) {
+            this.results[this._size].shift();
+        }
+
         $.ajax({
             url: this.ajaxHandlerScript,
             type: 'POST',
@@ -312,16 +362,6 @@ export default class GameModel {
     }
 
     lockGetReady(callresult) {
-        const time = document.querySelector('.time').textContent;
-        let recordName = document.getElementById('IName').value;
-        if (recordName.trim() === '') {
-            recordName = 'Unknown';
-        }
-        const newResult = { 'name': recordName, 'time': time, 'moves': this.moves };
-        this.results[this._size].push(newResult)
-        if (this.results[this._size].length >= 10) {
-            this.results[this._size].shift();
-        }
         if (callresult.error !== undefined) {
             console.log(callresult.error);
         } else {
@@ -377,21 +417,12 @@ export default class GameModel {
         alert(statusStr + ' ' + errorStr);
     }
 
-    checkCurrCell(x, y) {
-        const playField = document.querySelector('.play-field');
-        const playFieldRect = playField.getBoundingClientRect();
-        const playFieldX = playFieldRect.left;
-        const playFieldY = playFieldRect.top;
-        const relativeX = x - playFieldX;
-        const relativeY = y - playFieldY;
-        const cellSize = playFieldRect.width / this._size;
-        const columnIndex = Math.floor(relativeX / cellSize);
-        const rowIndex = Math.floor(relativeY / cellSize);
-        const cells = playField.querySelectorAll('.item');
-        const numColumns = Math.sqrt(cells.length); 
-        const cellIndex = rowIndex * numColumns + columnIndex;
-        const targetCell = cells[cellIndex];
-        this.openFlag(targetCell)
+    sortByTime(a, b) {
+        if (a.minutes !== b.minutes) {
+            return a.minutes - b.minutes;
+        }
+        // Если минуты равны, сравнение по секундам
+        return a.seconds - b.seconds;
     }
 }
 

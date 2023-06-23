@@ -63,7 +63,10 @@ export default class PlayFieldView {
             item.classList.add('item');
             this.playField.append(item)
         }
-        // changeTheme(checkInput.checked);
+        if(this.model.isChecked) {
+            this.model.changeTheme()
+        }
+
     }
 
     updateTime() {

@@ -26,17 +26,20 @@ export default class Settings {
         const selectSize = document.createElement('select');
         selectSize.classList.add('select-size')
         customDropdown.append(selectSize);
+        const buttons = document.createElement('div');
+        buttons.classList.add('buttons-sound');
         const soundBtn = document.createElement('button');
         soundBtn.classList.add('sound');
         const musicBtn = document.createElement('button');
         musicBtn.classList.add('music', 'off');
+        buttons.append(musicBtn, soundBtn)
         const minesAmount = document.createElement('div');
         this.createMinesOptions(minesAmount);
         this.createSizeOptions(selectSize);
         const startBtn = document.createElement('button');
         startBtn.classList.add('btn', 'btn-start');
         startBtn.textContent = 'New Game';
-        this.settings.append(customDropdown,minesAmount, toggleTheme, soundBtn, musicBtn, startBtn);
+        this.settings.append(customDropdown,minesAmount, toggleTheme, buttons, startBtn);
     }
 
     createMinesOptions(elem) {      

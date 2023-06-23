@@ -35,14 +35,14 @@ export default class RecordsView {
         this.easy.innerHTML += `<h3 class='level-title'>Easy</h3>`;
         this.medium.innerHTML += `<h3 class='level-title'>Medium</h3>`;
         this.hard.innerHTML += `<h3 class='level-title'>Hard</h3>`;
-        this.model.results[10].forEach(element => {
-            this.easy.innerHTML += `<li>${element.name}, Time: ${element.time}, Moves: ${element.moves}</li>`
+        this.model.results[10].forEach((element,index) => {
+            this.easy.innerHTML += `<li>${index+1}. ${element.name}, Time: ${element.minutes}:${element.seconds}, Moves: ${element.moves}</li>`
         });
-        this.model.results[15].forEach(element => {
-            this.medium.innerHTML += `<li>${element.name}, Time: ${element.time}, Moves: ${element.moves}</li>`
+        this.model.results[15].forEach((element,index) => {
+            this.medium.innerHTML += `<li>${index+1}. ${element.name}, Time: ${element.minutes}:${element.seconds}, Moves: ${element.moves}</li>`
         });
-        this.model.results[20].forEach(element => {
-            this.hard.innerHTML += `<li>${element.name}, Time: ${element.time}, Moves: ${element.moves}</li>`
+        this.model.results[20].forEach((element,index) => {
+            this.hard.innerHTML += `<li>${index+1}. ${element.name}, Time: ${element.minutes}:${element.seconds}, Moves: ${element.moves}</li>`
         });
     }
 }

@@ -36,7 +36,7 @@ export default class ViewGame {
         } else {
             this.bodyContainer = document.createElement('div');
             this.bodyContainer.classList.add('container');
-            this.modalWindow = new ModalWindowView();
+            this.modalWindow = new ModalWindowView(this.model);
             const modalElem = this.modalWindow.getElement();
             document.body.append(modalElem, this.bodyContainer);
             this.main = document.createElement('main');

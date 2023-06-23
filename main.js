@@ -9,10 +9,14 @@ const controllers = new Controllers();
 
 // увязываем компоненты друг с другом
 game.start(view);
+
 view.start(game);
 controllers.start(game);
 
 game.updateView();
 game.restoreInfo();
+game.switchToStateFromURLHash()
+
+
 controllers.addListeners();
 window.onhashchange = game.switchToStateFromURLHash.bind(game);

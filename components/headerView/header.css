@@ -59,3 +59,16 @@
     box-shadow: 0px 4px 3px rgba(13, 96, 111, 0.25);
     transition: background-color 0.6s;
 }
+
+@media screen and (max-width: 550px) {
+    .header {
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+
+    .title {
+        margin-left: -5%;
+    }
+}

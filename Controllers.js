@@ -7,7 +7,6 @@ export default class Controllers {
         this.model = model;
         this.minesInput = null;
         this.btnStart = null;
-        this.soundBtn = null;
         this.selectSize = null;
         this.music = this.model.music;
         this.touchX = 0;
@@ -44,16 +43,18 @@ export default class Controllers {
 
     addSettingsListeners() {
         if (!this.btnStart) {
+            const checkInput = document.getElementById('toggleCheckbox');
             this.btnStart = document.querySelector('.btn-start');
-            this.soundBtn = document.querySelector('.sound');
-            this.musicBtn = document.querySelector('.music');
+            const soundBtn = document.querySelector('.sound');
+            const musicBtn = document.querySelector('.music');
             this.minesInput = document.querySelector('.mines-input');
             this.selectSize = document.querySelector('.select-size');
             this.btnStart.addEventListener('click', this.startNewGame.bind(this));
             this.minesInput.addEventListener('input', this.changeBombsNum.bind(this));
-            this.soundBtn.addEventListener('click', this.toggleVolume.bind(this))
-            this.musicBtn.addEventListener('click', this.toggleMusic.bind(this))
+            soundBtn.addEventListener('click', this.toggleVolume.bind(this))
+            musicBtn.addEventListener('click', this.toggleMusic.bind(this))
             this.selectSize.addEventListener('change', this.changeSize.bind(this));
+            checkInput.addEventListener('change', this.changeTheme.bind(this));
         }
     }
 
@@ -138,6 +139,7 @@ export default class Controllers {
     }
 
     toggleMusic() {
+        
         this.model.toggleMusic();
     }
 
@@ -146,6 +148,7 @@ export default class Controllers {
     }
 
     saveResults() {
+        console.log(this.model.moves)
         this.model.storeInfo();
         this.closeModalAfterSave()
     }
@@ -174,4 +177,9 @@ export default class Controllers {
         this.model.checkCurrCell(offsetX, offsetY)
         event.preventDefault();
     }
+
+    changeTheme() {
+        console.log('Hi')
+        this.model.changeTheme()
+      }
 }

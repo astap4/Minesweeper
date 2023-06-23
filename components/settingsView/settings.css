@@ -55,6 +55,12 @@ input[type="checkbox"]:checked+.toggle-label::before {
     background-color: rgb(41, 40, 40);
 }
 
+.buttons-sound {
+    display: flex;
+    width: 40%;
+    justify-content: space-between;
+}
+
 .sound {
     background-image: url("../../assets/icons/sound-on.svg");
     width: 30px;

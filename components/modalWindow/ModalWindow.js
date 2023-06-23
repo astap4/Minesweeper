@@ -1,7 +1,7 @@
 export default class ModalWindowView {
-    constructor() {
+    constructor(model) {
         this.modal = null;
-        // this.modal = modal;
+        this.model = model;
         this.modalText = null;
         this.modalInput = null;
     }
@@ -27,7 +27,7 @@ export default class ModalWindowView {
     showWin() {
         document.getElementById('IName').value = '';
         this.modalInput.classList.remove('hidden');
-        this.modalText.textContent = `Hooray! You found all mines!`;
+        this.modalText.textContent = `Hooray! You found all mines in ${this.model.minutes}min ${this.model.seconds}sec and ${this.model.moves}moves!`;
     }
 
     showLose() {
